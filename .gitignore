@@ -1,1 +1,2 @@
-sample.pdf
+*.pdf
+node_modules

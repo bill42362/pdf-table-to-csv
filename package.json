@@ -11,5 +11,8 @@
     "csv"
   ],
   "author": "Pi-Yin Hsiao",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "pdfreader": "^0.2.3"
+  }
 }
