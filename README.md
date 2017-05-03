@@ -24,7 +24,7 @@ $ npm install
 ```
 
 ### Usage ###
-1. Copy all your pdf into pdf folder.
+1. Copy all your pdf into `pdf` folder.
 2. Edit `probes.js` to customize your .csv file.  You can use any editor you like.
 3. Run command:
 ```bash
