@@ -3,7 +3,12 @@
 const Pdfreader = require('pdfreader');
 const reader = new Pdfreader.PdfReader();
 const filenames = process.argv.slice(2);
-const targetRows = ['姓名', '性別', '出生日期'];
+const targetRows = [
+    {rowName: '姓名', page: 1, csvColumnName: '姓名 (p1)'},
+    {rowName: '姓名', page: 5, csvColumnName: '姓名 (p5)'},
+    {rowName: '性別', page: 1},
+    {rowName: '出生日期', page: 1},
+];
 
 const mapItemsToPages = (items) => {
     let pagingItems = items
@@ -16,8 +21,10 @@ const mapItemsToPages = (items) => {
 const mapRowItems = (items = [], targetRows = []) => {
     let data = {};
     items.forEach((item, index) => {
-        if(-1 != targetRows.indexOf(item.text) && !data[item.text]) {
-            data[item.text] = items[index + 1].text;
+        let row = targetRows.filter(row => row.rowName === item.text)[0];
+        if(row) {
+            let csvColumnName = row.csvColumnName || row.rowName;
+            data[csvColumnName] = data[csvColumnName] || items[index + 1].text;
         }
     });
     return data;
@@ -37,7 +44,13 @@ const readfilePromise = (filename) => {
 
 Promise.all(filenames.map(readfilePromise))
 .then(itemsOfFiles => {
-    let dataOfFiles = itemsOfFiles.map(items => { return mapRowItems(items, targetRows); });
+    let pagesOfFiles = itemsOfFiles.map(mapItemsToPages);
+    let dataOfFiles = pagesOfFiles.map((pageItems, pageIndex) => {
+        return pageItems.reduce((currentObject, itemsOfPage, index) => {
+            let rowsOfPage = targetRows.filter(row => index + 1 === row.page);
+            return Object.assign({}, currentObject, mapRowItems(itemsOfPage, rowsOfPage));
+        }, {});
+    });
     return new Promise(resolve => { resolve(dataOfFiles); });
 })
 .then(dataOfFiles => {
