@@ -1,14 +1,9 @@
 #!/usr/bin/env node
 'use strict';
 const Pdfreader = require('pdfreader');
+const targetRows = require('./probes.js');
 const reader = new Pdfreader.PdfReader();
 const filenames = process.argv.slice(2);
-const targetRows = [
-    {rowName: '姓名', page: 1, csvColumnName: '姓名 (p1)'},
-    {rowName: '姓名', page: 5, csvColumnName: '姓名 (p5)'},
-    {rowName: '性別', page: 1},
-    {rowName: '出生日期', page: 1},
-];
 
 const mapItemsToPages = (items) => {
     let pagingItems = items
@@ -45,9 +40,9 @@ const readfilePromise = (filename) => {
 Promise.all(filenames.map(readfilePromise))
 .then(itemsOfFiles => {
     let pagesOfFiles = itemsOfFiles.map(mapItemsToPages);
-    let dataOfFiles = pagesOfFiles.map((pageItems, pageIndex) => {
-        return pageItems.reduce((currentObject, itemsOfPage, index) => {
-            let rowsOfPage = targetRows.filter(row => index + 1 === row.page);
+    let dataOfFiles = pagesOfFiles.map(pageItems => {
+        return pageItems.reduce((currentObject, itemsOfPage, pageIndex) => {
+            let rowsOfPage = targetRows.filter(row => pageIndex + 1 === row.page);
             return Object.assign({}, currentObject, mapRowItems(itemsOfPage, rowsOfPage));
         }, {});
     });
@@ -62,4 +57,4 @@ Promise.all(filenames.map(readfilePromise))
     });
     return new Promise(resolve => { resolve(dataOfFiles); });
 })
-.catch(error => { console.log('error:', error); });
+.catch(error => { console.error('error:', error); });
