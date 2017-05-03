@@ -54,7 +54,12 @@ Promise.all(filenames.map(readfilePromise))
     return new Promise(resolve => { resolve(dataOfFiles); });
 })
 .then(dataOfFiles => {
-    console.log(dataOfFiles);
+    let columnNames = targetRows.map(row => row.csvColumnName || row.rowName);
+    console.log(columnNames.join(';,;'));
+    dataOfFiles.forEach(data => {
+        let rowContents = columnNames.map(columnName => data[columnName]);
+        console.log(rowContents.join(';,;'));
+    });
     return new Promise(resolve => { resolve(dataOfFiles); });
 })
 .catch(error => { console.log('error:', error); });
