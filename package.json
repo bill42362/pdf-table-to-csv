@@ -1,0 +1,15 @@
+{
+  "name": "pdfread",
+  "version": "1.0.0",
+  "description": "Read pdf to csv from CCK.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "pdf",
+    "csv"
+  ],
+  "author": "Pi-Yin Hsiao",
+  "license": "ISC"
+}
