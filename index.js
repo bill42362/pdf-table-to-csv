@@ -50,10 +50,10 @@ Promise.all(filenames.map(readfilePromise))
 })
 .then(dataOfFiles => {
     let columnNames = targetRows.map(row => row.csvColumnName || row.rowName);
-    console.log(columnNames.join(';,;'));
+    console.log(columnNames.join(','));
     dataOfFiles.forEach(data => {
         let rowContents = columnNames.map(columnName => data[columnName]);
-        console.log(rowContents.join(';,;'));
+        console.log(rowContents.join(','));
     });
     return new Promise(resolve => { resolve(dataOfFiles); });
 })

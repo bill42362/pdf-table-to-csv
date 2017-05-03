@@ -1,2 +1,6 @@
+*.swp
+*.DS_Store
+*backup*
+node_modules/
 *.pdf
-node_modules
+result.csv
