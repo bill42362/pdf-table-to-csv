@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 'use strict';
+const fs = require('fs');
 const Pdfreader = require('pdfreader');
 const targetRows = require('./probes.js');
 const reader = new Pdfreader.PdfReader();
 const filenames = process.argv.slice(2);
+const OUTPUT_FILE = 'result.csv';
 
 const mapItemsToPages = (items) => {
     let pagingItems = items
@@ -50,11 +52,22 @@ Promise.all(filenames.map(readfilePromise))
 })
 .then(dataOfFiles => {
     let columnNames = targetRows.map(row => row.csvColumnName || row.rowName);
+    let outputBuffer = '';
+    outputBuffer += columnNames.join(',') + '\n';
     console.log(columnNames.join(','));
     dataOfFiles.forEach(data => {
         let rowContents = columnNames.map(columnName => data[columnName]);
+        outputBuffer += rowContents.join(',') + '\n';
         console.log(rowContents.join(','));
     });
-    return new Promise(resolve => { resolve(dataOfFiles); });
+    return new Promise((resolve, reject) => {
+        fs.writeFile(OUTPUT_FILE, outputBuffer, error => {
+            if(error) { reject(error); }
+            else {
+                console.log(`\nOutput file is ${OUTPUT_FILE}.`);
+                resolve(dataOfFiles);
+            }
+        });
+    });
 })
 .catch(error => { console.error('error:', error); });
