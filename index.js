@@ -17,7 +17,7 @@ const mapRowItems = (items = [], targetRows = []) => {
     let data = {};
     items.forEach((item, index) => {
         let row = targetRows.filter(row => row.rowName === item.text)[0];
-        if(row && item.y === items[index + 1].y) {
+        if(row && 0.5 >= Math.abs(item.y - items[index + 1].y)) {
             let csvColumnName = row.csvColumnName || row.rowName;
             data[csvColumnName] = data[csvColumnName] || items[index + 1].text;
         }
