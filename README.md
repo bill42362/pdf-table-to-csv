@@ -28,5 +28,5 @@ $ npm install
 2. Edit `probes.js` to customize your .csv file.  You can use any editor you like.
 3. Run command:
 ```bash
-$ node index.js ./pdf/*.pdf > [YOUR RESULT FILE]
+$ node index.js ./pdf/*.pdf
 ```
